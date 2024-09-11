@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>일반 현황 설문 페이지</title>
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #edeeef;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      background-color: #e9ecef;
+      padding: 15px;
+      margin: 0 0 30px;
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table th, table td {
+      border: 1px solid #dee2e6;
+      padding: 15px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    table th {
+      width: 60px;
+      text-align: center;
+      background-color: #f1f1f1;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    table td {
+      font-size: 16px;
+    }
+
+    .input-cell {
+      display: flex;
+      align-items: center;
+    }
+
+    .input-cell input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .input-cell img {
+      margin-left: 10px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .next-button, .prev-button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .next-button:hover, .prev-button:hover {
+      background-color: #0056b3;
+    }
+
+    .prev-button {
+      margin-right: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      height: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-logo img {
+      max-width: 180px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #007bff;
+      width: 0; /* 기본값 0% */
+      border-radius: 10px;
+      transition: width 0.3s ease-in-out;
+    }
+
+    /* 기본적으로 라디오와 체크박스를 커스터마이징 */
+    input[type="radio"], input[type="checkbox"] {
+      appearance: none; /* 기본 브라우저 스타일 제거 */
+      margin: 0 10px 0 0;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #007bff;
+      border-radius: 50%;
+      background-color: #fff;
+      cursor: pointer;
+      position: relative;
+      vertical-align: middle;
+
+    }
+
+    /* 선택된 라디오 버튼 */
+    input[type="radio"]:checked {
+      background-color: #007bff;
+    }
+
+    /* 체크박스 커스터마이징 */
+    input[type="checkbox"] {
+      border-radius: 4px;
+    }
+
+    input[type="checkbox"]:checked {
+      background-color: #007bff;
+    }
+
+    /* 체크박스 체크 표시 */
+    input[type="checkbox"]:checked:before {
+      content: '';
+      position: absolute;
+      top: 0px;
+      left: 5px;
+      width: 5px;
+      height: 10px;
+      border: solid #fff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+
+    }
+
+    h3 {
+      margin-top: 5%;
+      background-color: #eaeaeabf;
+    }
+
+    label {
+      cursor: pointer;
+      line-height: 30px;
+    }
+
+    /* 전체 박스 스타일 */
+    .info-box {
+      border: 1px solid #ddd; /* 테두리 */
+      padding: 20px;         /* 안쪽 여백 */
+      margin: 20px 0;        /* 위아래 여백 */
+      border-radius: 10px;   /* 둥근 모서리 */
+      background-color: #f9f9f9; /* 배경색 */
+      font-family: 'Noto Sans KR', sans-serif; /* 한글 폰트 */
+    }
+
+    /* 제목 스타일 */
+    .info-box h3 {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    /* 설명 목록 스타일 */
+    .info-box ul {
+      list-style-type: none; /* 기본 목록 스타일 제거 */
+      padding-left: 0; /* 목록 왼쪽 여백 제거 */
+    }
+
+    .info-box ul li {
+      margin-bottom: 10px; /* 항목 간 간격 */
+      font-size: 14px;
+    }
+
+    /* 각 항목 앞에 대시 추가 */
+    .info-box ul li::before {
+      content: "–"; /* 대시 기호 */
+      margin-right: 10px; /* 기호와 텍스트 간 간격 */
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- 진행상황바 HTML -->
+  <div class="progress-container">
+    <div class="progress-bar"></div> <!-- 진행 상태는 자바스크립트로 설정 -->
+  </div>
+
+  <form id="surveyForm" method="POST" action="save">
+    <!-- 페이지 1 -->
+    <div id="page1" class="page">
+      <h2>A. 일반 현황</h2>
+      <table>
+        <tr>
+          <th>1</th>
+          <td style="text-align: center;font-size: 20px;">업체명</td>
+          <td class="input-cell"><input type="text" name="company" placeholder="업체명을 입력해주세요"></td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td style="text-align: center;font-size: 20px;">회사 규모</td>
+          <td>
+            <input type="radio" name="size" id="large" value="large">
+            <label for="large">대기업(상시근로자 300명 이상)</label><br>
+            <input type="radio" name="size" id="medium" value="medium">
+            <label for="medium">중기업(상시근로자 50 - 299명)</label><br>
+            <input type="radio" name="size" id="small" value="small">
+            <label for="small">소기업(상시근로자 50명 미만)</label>
+          </td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td style="text-align: center;font-size: 20px;">소재지</td>
+          <td>
+            <input type="radio" name="location" id="seoul" value="seoul">
+            <label for="seoul">서울</label><br>
+            <input type="radio" name="location" id="incheon" value="incheon">
+            <label for="incheon">인천</label><br>
+            <input type="radio" name="location" id="gyeonggi" value="gyeonggi">
+            <label for="gyeonggi">경기</label><br>
+            <input type="radio" name="location" id="other" value="other">
+            <label for="other">그 외 지역</label>
+          </td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td style="text-align: center;font-size: 20px;">업종</td>
+          <td>
+            <input type="radio" name="industry" id="it" value="it">
+            <label for="it">IT(빅데이터, 인공지능, 디지털콘텐츠 등)</label><br>
+            <input type="radio" name="industry" id="robot" value="robot">
+            <label for="robot">기계/로봇</label><br>
+            <input type="radio" name="industry" id="electric" value="electric">
+            <label for="electric">전기/전자</label><br>
+            <input type="radio" name="industry" id="automobile" value="automobile">
+            <label for="automobile">자동차</label><br>
+            <input type="radio" name="industry" id="metal" value="metal">
+            <label for="metal">금속</label><br>
+            <input type="radio" name="industry" value="기타">
+            <input type="text" name="industryOther" placeholder="기타 ( )" style="margin-top: 10px;width: 50%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;">
+          </td>
+        </tr>
+        <tr>
+          <th>5</th>
+          <td style="text-align: center;font-size: 20px;">응답자</td>
+          <td>
+            <input type="radio" name="responder" id="ceo" value="ceo">
+            <label for="ceo">대표</label><br>
+            <input type="radio" name="responder" id="employee" value="employee">
+            <label for="employee">임원</label><br>
+            <input type="radio" name="responder" id="hr" value="hr">
+            <label for="hr">인사 담당</label><br>
+            <input type="radio" name="responder" id="edu" value="edu">
+            <label for="edu">교육 담당</label><br>
+            <input type="radio" name="responder" id="worker" value="worker">
+            <label for="worker">재직자</label>
+          </td>
+        </tr>
+        <tr>
+          <th>6</th>
+          <td style="text-align: center;font-size: 20px;">응답자 해당분야 경력</td>
+          <td>
+            <input type="radio" name="experience" id="less3" value="less3">
+            <label for="less3">3년 미만</label><br>
+            <input type="radio" name="experience" id="3to5" value="3to5">
+            <label for="3to5">3-5년 미만</label><br>
+            <input type="radio" name="experience" id="5to10" value="5to10">
+            <label for="5to10">5-10년 미만</label><br>
+            <input type="radio" name="experience" id="10to15" value="10to15">
+            <label for="10to15">10-15년 미만</label><br>
+            <input type="radio" name="experience" id="more15" value="more15">
+            <label for="more15">15년 이상</label>
+          </td>
+        </tr>
+      </table>
+
+      <div class="button-container">
+        <button type="button" class="next-button" onclick="showNextPage()">다음 페이지 ▶</button>
+      </div>
+
+    </div>
+
+    <!-- 페이지 3 (재직자가 아닌 경우) -->
+    <div id="page2" class="page hidden">
+      <h2>B-1. 기본 현황 (기업체 대표, 인사/교육 담당자 항목)</h2>
+      <h3>B-1, ① : 귀사 재직자 교육 계획 수립 시 어떤 사항을 고려합니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+          <th>항목</th>
+          <th>전혀 중요하지 않다</th>
+          <th>별로 중요하지 않다</th>
+          <th>보통이다</th>
+          <th>대체로 중요하다</th>
+          <th>매우 중요하다</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>과정 내용</td>
+          <td style="text-align: center;"><input type="radio" name="course_content" value="not_important"></td>
+          <td style="text-align: center;"><input type="radio" name="course_content" value="slightly_important"></td>
+          <td style="text-align: center;"><input type="radio" name="course_content" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="course_content" value="important"></td>
+          <td style="text-align: center;"><input type="radio" name="course_content" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육 시간</td>
+          <td style="text-align: center;"><input type="radio" name="education_time" value="not_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_time" value="slightly_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_time" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="education_time" value="important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_time" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육 기간</td>
+          <td style="text-align: center;"><input type="radio" name="education_duration" value="not_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_duration" value="slightly_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_duration" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="education_duration" value="important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_duration" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>강사 자질</td>
+          <td style="text-align: center;"><input type="radio" name="instructor_qualification" value="not_important"></td>
+          <td style="text-align: center;"><input type="radio" name="instructor_qualification" value="slightly_important"></td>
+          <td style="text-align: center;"><input type="radio" name="instructor_qualification" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="instructor_qualification" value="important"></td>
+          <td style="text-align: center;"><input type="radio" name="instructor_qualification" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육기관의<br></br>근접성</td>
+          <td style="text-align: center;"><input type="radio" name="education_location" value="not_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_location" value="slightly_important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_location" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="education_location" value="important"></td>
+          <td style="text-align: center;"><input type="radio" name="education_location" value="very_important"></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h3>B-1, ② : 귀사 재직자가 교육 수강 시, 자사의 입장에서는 어떤 시간대가 가장 효과적입니까? (복수선택 가능)</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="checkbox" name="preferred_time" value="weekday_day" id="preferred_time1"> <label for="preferred_time1">주간(09:00-18:00)</label> </td>
+          <td><input type="checkbox" name="preferred_time" value="weekday_night" id="preferred_time2">  <label for="preferred_time2">주중 야간(18:00-22:00)</label></td>
+          <td><input type="checkbox" name="preferred_time" value="weekend_day" id="preferred_time3">  <label for="preferred_time3">주말 주간(09:00-18:00)</label></td>
+          <td><input type="checkbox" name="preferred_time" value="weekend_night" id="preferred_time4">  <label for="preferred_time4">주말 야간(18:00-22:00)</label></td>
+        </tr>
+      </table>
+
+      <h3>B-1, ③ : 귀사 재직자가 교육 수강 시, 자사의 입장에서는 어떤 교육 유형이 가장 효과적입니까? (복수선택 가능)</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="checkbox" name="education_type" value="online" id="education_type1"> <label for="education_type1">온라인</label></td>
+          <td><input type="checkbox" name="education_type" value="offline" id="education_type2"> <label for="education_type2">오프라인</label></td>
+          <td><input type="checkbox" name="education_type" value="blended" id="education_type3"> <label for="education_type3">온-오프 블렌디드</label></td>
+        </tr>
+      </table>
+
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="startSurvey()">◀ 이전 페이지</button>
+        <button type="button" class="next-button" onclick="showNextPage()">다음 페이지 ▶</button>
+      </div>
+
+    </div>
+
+    <!-- 페이지 4 -->
+    <div id="page3" class="page hidden">
+      <h2>B-2. 교육 과정 수요조사 (기업체 대표, 인사/교육 담당자 항목)</h2>
+
+      <h3>B-2, ① : 귀사의 사업 관련하여 "AI 활용" 기술 및 품질에 대한 시장의 새로운 요구 사항이 있다면 무엇인가요? <br>(복수선택 가능)</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand1" name="market_demand" value="real_time_monitoring">
+            <label for="market_demand1">실시간 품질 모니터링</label></td>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand2" name="market_demand" value="predictive_maintenance">
+            <label for="market_demand2">예측 유지 보수</label></td>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand3" name="market_demand" value="data_improvement">
+            <label for="market_demand3">데이터 기반 품질 개선</label></td>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand4" name="market_demand" value="smart_factory">
+            <label for="market_demand4">스마트 팩토리 구현</label></td>
+        </tr>
+        <tr>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand5" name="market_demand" value="environment_friendly_production">
+            <label for="market_demand5">환경보호와 접목한 AI활용 제조</label></td>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand6" name="market_demand" value="customized_production">
+            <label for="market_demand6">AI 활용 고객 맞춤형 제품 생산</label></td>
+          <td style="font-size: 14px;"><input type="checkbox" id="market_demand7" name="market_demand" value="compliance_regulations">
+            <label for="market_demand7">국제표준 및 규제 준수</label></td>
+          <td style="font-size: 14px;"><input type="text" name="market_demand_other" placeholder="기타 ( )" style="width: 80%;"></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ② : 현재 귀사 사업에서 AI 기술이 차지하는 사업화 단계 수준은 어느 정도라고 보시나요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="ai_stage1" name="ai_stage" value="under_review">
+            <label for="ai_stage1">검토 중</label></td>
+          <td><input type="radio" id="ai_stage2" name="ai_stage" value="adopted">
+            <label for="ai_stage2">도입</label></td>
+          <td><input type="radio" id="ai_stage3" name="ai_stage" value="applied">
+            <label for="ai_stage3">적용</label></td>
+          <td><input type="radio" id="ai_stage4" name="ai_stage" value="utilized">
+            <label for="ai_stage4">활용</label></td>
+          <td><input type="text" name="ai_stage_other" placeholder="기타 ( )" style="width: 80%;"></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ③ : 신사업 추진을 위한 AI 기술에 대해 귀사에서 가장 기대하는 바는 무엇입니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="ai_expectation1" name="ai_expectation" value="quality_improvement">
+            <label for="ai_expectation1">품질관리 개선</label></td>
+          <td><input type="radio" id="ai_expectation2" name="ai_expectation" value="increase_productivity">
+            <label for="ai_expectation2">생산성 증대</label></td>
+          <td><input type="radio" id="ai_expectation3" name="ai_expectation" value="equipment_maintenance">
+            <label for="ai_expectation3">장비/보존 설비 예측 진단</label></td>
+          <td><input type="radio" id="ai_expectation4" name="ai_expectation" value="automation_design">
+            <label for="ai_expectation4">공장자동화 무인 설계</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" id="ai_expectation5" name="ai_expectation" value="demand_forecasting">
+            <label for="ai_expectation5">수요계획 및 예측</label></td>
+          <td><input type="text" name="ai_expectation_other" placeholder="기타 ( )" style="width: 80%;"></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ④ : 현재 귀사는 "AI 품질공학"에 대하여 얼마나 관심이 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="ai_quality_interest1" name="ai_quality_interest" value="not_interested">
+            <label for="ai_quality_interest1">전혀 관심 없다</label></td>
+          <td><input type="radio" id="ai_quality_interest2" name="ai_quality_interest" value="slightly_interested">
+            <label for="ai_quality_interest2">별로 관심 없다</label></td>
+          <td><input type="radio" id="ai_quality_interest3" name="ai_quality_interest" value="neutral">
+            <label for="ai_quality_interest3">보통이다</label></td>
+          <td><input type="radio" id="ai_quality_interest4" name="ai_quality_interest" value="interested">
+            <label for="ai_quality_interest4">일부 관심 갖고 있다</label></td>
+          <td><input type="radio" id="ai_quality_interest5" name="ai_quality_interest" value="very_interested">
+            <label for="ai_quality_interest5">매우 관심 갖고 있다</label></td>
+        </tr>
+      </table>
+
+      <div class="info-box">
+        <h1>※ AI 활용 품질공학</h1>
+        <ul>
+          <li>품질관리 및 개선 기반 품질공학(Quality Engineering)을 바탕으로 AI 알고리즘, 데이터 분석, 머신러닝 등의 인공지능(AI) 기술의 융합을 다루는 학문 분야</li>
+          <li>품질검사 자동화, 생산 공정 최적화를 통한 불량 최소화, 예측 유지/보수 등의 분야에 활용</li>
+          <li>4차 산업혁명 시대의 제조업, 서비스업, IT산업 등 다양한 미래산업 분야에서의 품질 향상과 혁신에 기여</li>
+        </ul>
+      </div>
+
+      <h3>B-2, ⑤ : 현재 귀사는 "AI 품질공학" 전문 인력을 확보하고 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td style="font-size: 14px;"><input type="radio" id="ai_expert1" name="ai_expert" value="not_secured_at_all">
+            <label for="ai_expert1">전혀 확보하지 않았다</label></td>
+          <td style="font-size: 14px;"><input type="radio" id="ai_expert2" name="ai_expert" value="barely_secured">
+            <label for="ai_expert2">별로 확보하지 않았다</label></td>
+          <td style="font-size: 14px;"><input type="radio" id="ai_expert3" name="ai_expert" value="neutral">
+            <label for="ai_expert3">보통이다</label></td>
+          <td style="font-size: 14px;"><input type="radio" id="ai_expert4" name="ai_expert" value="mostly_secured">
+            <label for="ai_expert4">대체로 확보하고 있다</label></td>
+          <td style="font-size: 14px;"><input type="radio" id="ai_expert5" name="ai_expert" value="fully_secured">
+            <label for="ai_expert5">충분히 확보하고 있다</label></td>
+        </tr>
+      </table>
+
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="showPrevPage()">◀ 이전 페이지</button>
+        <button type="button" class="next-button" onclick="showNextPage()">다음 페이지 ▶</button>
+      </div>
+
+
+    </div>
+
+    <!-- 페이지 5 -->
+    <div id="page4" class="page hidden">
+      <h2>B-2. 교육 과정 수요조사 (기업체 대표, 인사/교육 담당자 항목)</h2>
+
+      <h3>B-2, ⑥ : 현재 귀사에서는 "AI 활용 품질공학" 전문 인력 양성을 위한 자체교육을 실시하고 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="education1" name="education" value="not_needed_at_all">
+            <label for="education1">전혀 필요하지 않다</label></td>
+          <td><input type="radio" id="education2" name="education" value="barely_needed">
+            <label for="education2">별로 필요하지 않다</label></td>
+          <td><input type="radio" id="education3" name="education" value="neutral">
+            <label for="education3">보통이다</label></td>
+          <td><input type="radio" id="education4" name="education" value="mostly_needed">
+            <label for="education4">대체로 필요하다</label></td>
+          <td><input type="radio" id="education5" name="education" value="very_needed">
+            <label for="education5">매우 필요하다</label></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ⑦ : 현재 귀사에서는 "AI 활용 품질공학" 전문 인력 양성이 필요한가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="need1" name="need" value="not_needed_at_all">
+            <label for="need1">전혀 필요하지 않다</label></td>
+          <td><input type="radio" id="need2" name="need" value="barely_needed">
+            <label for="need2">별로 필요하지 않다</label></td>
+          <td><input type="radio" id="need3" name="need" value="neutral">
+            <label for="need3">보통이다</label></td>
+          <td><input type="radio" id="need4" name="need" value="mostly_needed">
+            <label for="need4">대체로 필요하다</label></td>
+          <td><input type="radio" id="need5" name="need" value="very_needed">
+            <label for="need5">매우 필요하다</label></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ⑧ : 귀사에 "AI 활용 품질공학" 전문 인력이 필요하다면 어떤 수준의 인력이 다수 필요한가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="level1" name="needed_level" value="basic">
+            <label for="level1">초급 : 서비스 활용형 인력</label></td>
+          <td><input type="radio" id="level2" name="needed_level" value="intermediate">
+            <label for="level2">중급 : 실무활용 및 산업 응용형 인력</label></td>
+          <td><input type="radio" id="level3" name="needed_level" value="advanced">
+            <label for="level3">고급 : AI 관련 기술개발 및 문제해결형 인력</label></td>
+          <td><input type="radio" id="level4" name="needed_level" value="expert">
+            <label for="level4">최고급 : 글로벌 수준의 연구자 및 과학자</label></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ⑨ : 현재 귀사에서는 "AI 활용 품질공학" 전문 인력 양성을 위한 자체교육을 실시하고 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="training1" name="training" value="enough">
+            <label for="training1">충분히 하고 있다</label></td>
+          <td><input type="radio" id="training2" name="training" value="inadequate">
+            <label for="training2">불충분하게 하고 있다</label></td>
+          <td><input type="radio" id="training3" name="training" value="none">
+            <label for="training3">전혀 하고 있지 않다</label></td>
+        </tr>
+      </table>
+
+      <h3>B-2, ⑩ : 현재 귀사에서는 "AI 활용 품질공학" 전문 인력 확보를 위한 인력 채용계획을 가지고 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="recruitment_plan_yes" name="recruitment_plan" value="yes">
+            <label for="recruitment_plan_yes">있다 (B-2, ⑪ 항으로 이동)</label> </td>
+          <td><input type="radio" id="recruitment_plan_no" name="recruitment_plan" value="no">
+            <label for="recruitment_plan_no">없다 (제출하기로 이동)</label></td>
+        </tr>
+      </table>
+
+      <h3 >B-2, ⑪ : 현재 귀사에서는 "AI 활용 품질공학" 전문 인력 확보를 위한 채용계획이 있다면 어느 정도 인력을 채용할 계획입니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5" id="recruitment_plan_section">
+        <tr>
+          <td><input type="radio" id="hire1" name="hiring_count" value="1">
+            <label for="hire1">1명</label></td>
+          <td><input type="radio" id="hire2" name="hiring_count" value="2">
+            <label for="hire2">2명</label></td>
+          <td><input type="radio" id="hire3" name="hiring_count" value="3">
+            <label for="hire3">3명</label></td>
+          <td><input type="radio" id="hire4" name="hiring_count" value="4">
+            <label for="hire4">4명</label></td>
+          <td><input type="radio" id="hire5" name="hiring_count" value="5">
+            <label for="hire5">5명 이상</label></td>
+        </tr>
+      </table>
+
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="showPrevPage()">◀ 이전 페이지</button>
+        <button type="submit" class="next-button" style="background-color: #ff5555">제출 ▶</button>
+      </div>
+
+
+    </div>
+
+    <!-- 페이지 6 (재직자의 경우)-->
+    <div id="page6" class="page hidden">
+      <h2>C-1. 기본 현황 (재직자 항목)</h2>
+      <h3>C-1, Ⓐ : 교육 참여 시 어떤 사항을 고려합니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+          <th>항목</th>
+          <th>전혀 중요하지 않다</th>
+          <th>별로 중요하지 않다</th>
+          <th>보통이다</th>
+          <th>대체로 중요하다</th>
+          <th>매우 중요하다</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>과정 내용</td>
+          <td><input type="radio" name="course_content" value="not_important"></td>
+          <td><input type="radio" name="course_content" value="slightly_important"></td>
+          <td><input type="radio" name="course_content" value="neutral"></td>
+          <td><input type="radio" name="course_content" value="important"></td>
+          <td><input type="radio" name="course_content" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육 시간</td>
+          <td><input type="radio" name="education_time" value="not_important"></td>
+          <td><input type="radio" name="education_time" value="slightly_important"></td>
+          <td><input type="radio" name="education_time" value="neutral"></td>
+          <td><input type="radio" name="education_time" value="important"></td>
+          <td><input type="radio" name="education_time" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육 기간</td>
+          <td><input type="radio" name="education_duration" value="not_important"></td>
+          <td><input type="radio" name="education_duration" value="slightly_important"></td>
+          <td><input type="radio" name="education_duration" value="neutral"></td>
+          <td><input type="radio" name="education_duration" value="important"></td>
+          <td><input type="radio" name="education_duration" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>강사 자질</td>
+          <td><input type="radio" name="instructor_qualification" value="not_important"></td>
+          <td><input type="radio" name="instructor_qualification" value="slightly_important"></td>
+          <td><input type="radio" name="instructor_qualification" value="neutral"></td>
+          <td><input type="radio" name="instructor_qualification" value="important"></td>
+          <td><input type="radio" name="instructor_qualification" value="very_important"></td>
+        </tr>
+        <tr>
+          <td>교육기관의<br></br>근접성</td>
+          <td><input type="radio" name="education_location" value="not_important"></td>
+          <td><input type="radio" name="education_location" value="slightly_important"></td>
+          <td><input type="radio" name="education_location" value="neutral"></td>
+          <td><input type="radio" name="education_location" value="important"></td>
+          <td><input type="radio" name="education_location" value="very_important"></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h3>C-1, Ⓑ : 귀사 재직자가 교육 수강 시, 자사의 입장에서는 어떤 시간대가 가장 효과적 입니까? (복수선택 가능)</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="checkbox" name="preferred_time" value="weekday_day" id="preferred_time5"> <label for="preferred_time5">주간(09:00-18:00)</label> </td>
+          <td><input type="checkbox" name="preferred_time" value="weekday_night" id="preferred_time6">  <label for="preferred_time6">주중 야간(18:00-22:00)</label></td>
+          <td><input type="checkbox" name="preferred_time" value="weekend_day" id="preferred_time7">  <label for="preferred_time7">주말 주간(09:00-18:00)</label></td>
+          <td><input type="checkbox" name="preferred_time" value="weekend_night" id="preferred_time8">  <label for="preferred_time8">주말 야간(18:00-22:00)</label></td>
+        </tr>
+      </table>
+
+      <h3>C-1, Ⓒ : 귀사 재직자가 교육 수강 시, 자사의 입장에서는 어떤 교육 유형이 가장 효과적 입니까? (복수선택 가능)</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="checkbox" name="education_type" value="online" id="education_type9"> <label for="education_type9">온라인</label></td>
+          <td><input type="checkbox" name="education_type" value="offline" id="education_type10"> <label for="education_type10">오프라인</label></td>
+          <td><input type="checkbox" name="education_type" value="blended" id="education_type11"> <label for="education_type11">온-오프 블렌디드</label></td>
+        </tr>
+      </table>
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="startSurvey()">◀ 이전 페이지</button>
+        <button type="button" class="next-button" onclick="showNextPage()">다음 페이지 ▶</button>
+      </div>
+
+    </div>
+
+    <!-- 페이지 7 -->
+    <div id="page7" class="page hidden">
+      <h2>C-2. 교육 과정 수요조사 (재직자 항목)</h2>
+      <h3>C-2, Ⓐ : 현재 귀하는 “AI융합 품질공학”에 대하여 얼마나 알고 계신가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="ai_quality_interest6" name="ai_quality_interest2" value="not_interested">
+            <label for="ai_quality_interest6">전혀 관심 없다</label></td>
+          <td><input type="radio" id="ai_quality_interest7" name="ai_quality_interest2" value="slightly_interested">
+            <label for="ai_quality_interest7">별로 관심 없다</label></td>
+          <td><input type="radio" id="ai_quality_interest8" name="ai_quality_interest2" value="neutral">
+            <label for="ai_quality_interest8">보통이다</label></td>
+          <td><input type="radio" id="ai_quality_interest9" name="ai_quality_interest2" value="interested">
+            <label for="ai_quality_interest9">일부 관심 갖고 있다</label></td>
+          <td><input type="radio" id="ai_quality_interest10" name="ai_quality_interest2" value="very_interested">
+            <label for="ai_quality_interest10">매우 관심 갖고 있다</label></td>
+        </tr>
+      </table>
+
+      <div class="info-box">
+        <h1>※ AI 활용 품질공학</h1>
+        <ul>
+          <li>품질관리 및 개선 기반 품질공학(Quality Engineering)을 바탕으로 AI 알고리즘, 데이터 분석, 머신러닝 등의 인공지능(AI) 기술의 융합을 다루는 학문 분야</li>
+          <li>품질검사 자동화, 생산 공정 최적화를 통한 불량 최소화, 예측 유지/보수 등의 분야에 활용</li>
+          <li>4차 산업혁명 시대의 제조업, 서비스업, IT산업 등 다양한 미래산업 분야에서의 품질 향상과 혁신에 기여</li>
+        </ul>
+      </div>
+
+      <h3>C-2, ① : 현재 귀하가 종사하고 산업계에서는 "AI 활용 품질공학" 인력 양성이 필요합니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+          <th style="text-align: center;">전혀 필요하지 않았다</th>
+          <th style="text-align: center;">별로 필요하지 않았다</th>
+          <th style="text-align: center;">보통이다</th>
+          <th style="text-align: center;">대체로 필요하다</th>
+          <th style="text-align: center;">매우 필요하다</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td style="text-align: center;"><input type="radio" name="need_for_training" value="not_needed_at_all"></td>
+          <td style="text-align: center;"><input type="radio" name="need_for_training" value="barely_needed"></td>
+          <td style="text-align: center;"><input type="radio" name="need_for_training" value="neutral"></td>
+          <td style="text-align: center;"><input type="radio" name="need_for_training" value="mostly_needed"></td>
+          <td style="text-align: center;"><input type="radio" name="need_for_training" value="very_needed"></td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h3>C-2, ② : "AI 활용 품질공학" 교육과정이 대학 학점으로 인정된다면, 교육에 참가할 의사가 있습니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="participation1" name="participation" value="participate">
+            <label for="participation1">참여하겠다 (C-2, ③항으로 이동)</label></td>
+          <td><input type="radio" id="participation2" name="participation" value="not_participate">
+            <label for="participation2">참여하지 않겠다 (다음 페이지 이동)</label></td>
+        </tr>
+      </table>
+
+      <h3>C-2, ③ : 교육에 참여하시려는 가장 큰 이유는 무엇인가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td style="font-size: 15px;"><input type="radio" name="reason" value="qualification" id="qualification">
+            <label for="qualification">학위 포함 자격 취득</label></td>
+          <td  style="font-size: 15px;"><input type="radio" name="reason" value="promotion" id="promotion">
+            <label for="promotion">사내 승진 기회</label></td>
+          <td style="font-size: 15px;"><input type="radio" name="reason" value="skill_improvement" id="skill_improvement">
+            <label for="skill_improvement">직무능력 향상</label></td>
+          <td style="font-size: 15px;"><input type="radio" name="reason" value="new_technology" id="new_technology">
+            <label for="new_technology">새로운 기술 습득 등</label></td>
+          <td style="font-size: 15px;"><input type="text" name="reason_other" placeholder="기타 ( )" style="width: 80%;"></td>
+        </tr>
+      </table>
+
+      <h3>C-2, ④ : 만약 이 교육과정에 참여하게 된다면, 예상되는 학습시간 투자는 1주일간 어느 정도 입니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
+        <tr>
+          <th style="text-align: center;">3시간 (1과목)</th>
+          <th style="text-align: center;">6시간 (2과목)</th>
+          <th style="text-align: center;">9시간 (3과목)</th>
+          <th style="text-align: center;">12시간 (4과목)</th>
+          <th style="text-align: center;">15시간 (5과목) 이상</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td style="text-align: center;"><input type="radio" name="study_time" value="3_hours"></td>
+          <td style="text-align: center;"><input type="radio" name="study_time" value="6_hours"></td>
+          <td style="text-align: center;"><input type="radio" name="study_time" value="9_hours"></td>
+          <td style="text-align: center;"><input type="radio" name="study_time" value="12_hours"></td>
+          <td style="text-align: center;"><input type="radio" name="study_time" value="15_hours_or_more"></td>
+        </tr>
+        </tbody>
+      </table>
+      <div class="info-box">
+        <h1>※ 교과목 운영(안)</h1>
+        <ul>
+          <li>학기당 3학점, 수업 8개 과목 개설 - 2학기제 운영</li>
+          <li>단기간 지정과목 4과목 이수 시, 마이크로디그리 취득 가능</li>
+        </ul>
+      </div>
+
+
+
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="showPrevPage()">◀ 이전 페이지</button>
+        <button type="button" class="next-button" onclick="showNextPage()">다음 페이지 ▶</button>
+      </div>
+    </div>
+
+    <!-- 페이지 8 -->
+    <div id="page8" class="page hidden">
+      <h2>C-2. 교육 과정 수요조사 (재직자 항목)</h2>
+      <h3>C-2, ⑤ : 교육에 참여하지 않는다면, 그 이유는 무엇인가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="reason1" name="non_participation_reason" value="employee_disinterest">
+            <label for="reason1">임직원의 무관심</label></td>
+          <td><input type="radio" id="reason2" name="non_participation_reason" value="schedule_conflict">
+            <label for="reason2">업무일정 차질(장기간 교육의 어려움)</label></td>
+          <td><input type="radio" id="reason3" name="non_participation_reason" value="lack_of_programs">
+            <label for="reason3">적절한 교육 프로그램의 부재</label></td>
+          <td><input type="radio" id="reason4" name="non_participation_reason" value="program_cost">
+            <label for="reason4">교육/훈련 비용 문제</label></td>
+        </tr>
+        <tr>
+          <td><input type="radio" id="reason5" name="non_participation_reason" value="business_irrelevance">
+            <label for="reason5">사업 분야와의 연관성 부족</label></td>
+          <td><input type="radio" id="reason6" name="non_participation_reason" value="training_effectiveness_doubt">
+            <label for="reason6">교육/훈련 효과에 대한 회의</label></td>
+          <td><input type="text" id="reason7" name="non_participation_reason_other" value="other" placeholder="기타 ( )"></td>
+        </tr>
+      </table>
+
+      <h3>C-2, ⑥ : "AI 활용 품질공학" 관련 자격증 취득 과정이 개설된다면, 자격 취득 의사는 있으신가요?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="certification1" name="certification_intention" value="intend_to_acquire">
+            <label for="certification1">취득할 의사 있다</label></td>
+          <td><input type="radio" id="certification2" name="certification_intention" value="no_intention_to_acquire">
+            <label for="certification2">취득할 의사 없다</label></td>
+        </tr>
+      </table>
+
+      <h3>C-2, ⑦ : "AI 활용 품질공학" 관련 학위, 마이크로디그리 및 자격증 취득이 향후 취업(재취업, 직업 전환)에 도움이 될 것으로 전망하십니까?</h3>
+      <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+          <td><input type="radio" id="career_help1" name="career_help" value="helpful">
+            <label for="career_help1">도움이 된다</label></td>
+          <td><input type="radio" id="career_help2" name="career_help" value="not_helpful">
+            <label for="career_help2">도움이 되지 않는다</label></td>
+        </tr>
+      </table>
+
+
+      <div class="button-container">
+        <button type="button" class="prev-button" onclick="showPrevPage()">◀ 이전 페이지</button>
+        <button type="submit" class="next-button" style="background-color: #ff5555">제출 ▶</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('input[name="participation"]').change(function() {
+      const reasonSection = $('h3:contains("C-2, ③")').next();
+      const studyTimeSection = $('h3:contains("C-2, ④")').next();
+
+      if ($(this).val() === 'participate') {
+        reasonSection.show();
+        studyTimeSection.show();
+      } else {
+        reasonSection.hide();
+        studyTimeSection.hide();
+      }
+    });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    $('input[name="recruitment_plan"]').change(function() {
+      if ($(this).val() === 'yes') {
+        $('#recruitment_plan_section').removeClass('hidden');
+      } else {
+        $('#recruitment_plan_section').addClass('hidden');
+      }
+    });
+  });
+</script>
+<script>
+  // 쿠키에 데이터를 저장하는 함수
+  function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // 유효 기간 설정
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+  }
+
+  // 쿠키에서 데이터를 가져오는 함수
+  function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+  }
+
+  // 모든 input 요소의 값을 쿠키에 저장하는 함수
+  function saveAllInputsToCookies() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      if (input.type === 'radio' || input.type === 'checkbox') {
+        if (input.checked) {
+          setCookie(input.name, input.value, 7); // 체크된 라디오나 체크박스의 값 저장
+        }
+      } else {
+        setCookie(input.name, input.value, 7); // 일반 input 필드 값 저장
+      }
+    });
+  }
+
+  // 페이지 로드 시 쿠키에서 값을 불러와 input 필드에 설정하는 함수
+  function loadAllInputsFromCookies() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      const savedValue = getCookie(input.name);
+      if (savedValue) {
+        if (input.type === 'radio' || input.type === 'checkbox') {
+          if (input.value === savedValue) {
+            input.checked = true;
+          }
+        } else {
+          input.value = savedValue;
+        }
+      }
+    });
+  }
+
+  // 각 input 필드에 변화가 있을 때 자동으로 저장하는 이벤트 핸들러 설정
+  function addInputEventListeners() {
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(function(input) {
+      if (input.type === 'radio' || input.type === 'checkbox') {
+        input.addEventListener('change', saveAllInputsToCookies); // 라디오나 체크박스는 선택될 때 저장
+      } else {
+        input.addEventListener('input', saveAllInputsToCookies); // 텍스트, 숫자 필드는 입력될 때 저장
+      }
+    });
+  }
+
+  // 페이지 로드 시 쿠키 값 불러오기 및 이벤트 리스너 추가
+  window.onload = function() {
+    loadAllInputsFromCookies(); // 쿠키에서 값을 불러와 입력 필드에 채움
+    addInputEventListeners();   // 입력 필드 변경 시 자동으로 쿠키에 저장되도록 설정
+  };
+
+  // 모든 쿠키를 삭제하는 함수
+  function deleteAllCookies() {
+    const cookies = document.cookie.split(";");
+    cookies.forEach(function(cookie) {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    });
+  }
+
+  // 제출 시 쿠키 삭제
+  document.getElementById('surveyForm').addEventListener('submit', function() {
+    deleteAllCookies();
+  });
+
+
+  let currentPage = 1;
+
+  function showNextPage() {
+    // 선택된 'responder' 값 가져오기
+    const responder = document.querySelector('input[name="responder"]:checked');
+
+    // 재직자가 아닌 경우 페이지 2, 3, 4로 이동
+    if (responder && responder.value !== 'worker') {
+      if (currentPage < 4) {
+        currentPage++;
+        showPage(currentPage, currentPage * 25); // 진행률 계산
+      }
+    }
+    // 재직자인 경우 페이지 6, 7, 8로 이동
+    else if (responder && responder.value === 'worker') {
+      if (currentPage < 8 && currentPage >= 6) {
+        currentPage++;
+        showPage(currentPage, (currentPage - 3) * 20); // 재직자는 다른 진행률 계산
+      } else if (currentPage === 1) {
+        currentPage = 6; // 재직자의 경우 바로 6번 페이지로 이동
+        showPage(currentPage, 60); // 진행률 60%부터 시작
+      }
+    }
+  }
+
+  function showPrevPage() {
+    // 재직자가 아닌 경우 이전 페이지로 돌아감 (2, 3, 4로 이동 가능)
+    if (currentPage > 2 && currentPage <= 4) {
+      currentPage--;
+      showPage(currentPage, currentPage * 20);
+    }
+    // 재직자인 경우 이전 페이지로 돌아감 (6, 7, 8로 이동 가능)
+    else if (currentPage > 6 && currentPage <= 8) {
+      currentPage--;
+      showPage(currentPage, (currentPage - 3) * 20); // 재직자는 다른 진행률 계산
+    }
+  }
+
+  function showPage(pageNumber, progress) {
+    // 모든 페이지 숨기기
+    document.querySelectorAll('.page').forEach(function(page) {
+      page.classList.add('hidden');
+    });
+
+    // 해당 페이지 보이기
+    document.getElementById('page' + pageNumber).classList.remove('hidden');
+
+    // 진행바 업데이트
+    const progressBar = document.querySelector('.progress-bar');
+    progressBar.style.width = progress + '%';
+
+    // 페이지 맨 위로 스크롤
+    window.scrollTo(0, 0);
+  }
+
+  function startSurvey() {
+    currentPage = 1;
+    showPage(currentPage, 20);
+  }
+</script>
+
+
+
+</body>
+</html>
